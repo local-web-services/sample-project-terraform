@@ -1,0 +1,1 @@
+Done. Updated the README to mention OpenTofu as an alternative throughout: the intro, prerequisites, setup, local development, testing, and deploy sections.
