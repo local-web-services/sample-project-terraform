@@ -1,6 +1,6 @@
 # lws-sample-project-terraform
 
-A serverless order processing system built with Terraform and designed for local development with [LWS (Local Web Services)](https://github.com/local-web-services).
+A serverless order processing system built with Terraform and designed for local development with [Local Web Services](https://github.com/local-web-services/local-web-services).
 
 ## Architecture
 
@@ -55,25 +55,55 @@ lws-sample-project-terraform/
 
 ## Prerequisites
 
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) (for running local-web-services)
 - [Terraform](https://www.terraform.io/) >= 1.0
-- [LWS](https://github.com/local-web-services) for local development
+- Node.js 18+
 
 ## Setup
 
+Install Lambda function dependencies:
+
+```bash
+cd lambda/create-order && npm install && cd ../..
+cd lambda/get-order && npm install && cd ../..
+cd lambda/process-order && npm install && cd ../..
+cd lambda/generate-receipt && npm install && cd ../..
+```
+
+Initialize Terraform:
+
 ```bash
 terraform init
-terraform plan
 ```
 
 ## Local Development
 
-Start the local development environment with LWS:
+### How It Works
+
+When you run `ldk dev` in this directory, it:
+
+1. **Detects** the `.tf` files and enters Terraform mode automatically
+2. **Starts** all AWS service providers locally (DynamoDB, SQS, S3, SNS, Step Functions, API Gateway, Lambda, IAM, STS)
+3. **Generates** a `_lws_override.tf` file that redirects all AWS provider endpoints to your local services (this file is auto-added to `.gitignore`)
+4. **Watches** for file changes and reloads automatically
+
+You then run `terraform apply` against these local endpoints — no AWS account needed.
+
+### Start the local environment
 
 ```bash
-lws dev
+# Terminal 1: Start local services
+uvx --from local-web-services ldk dev
 ```
 
-This starts all services locally (API Gateway, DynamoDB, SQS, S3, SNS, Step Functions) and watches for file changes.
+### Apply Terraform
+
+```bash
+# Terminal 2: Apply against local endpoints
+terraform apply -auto-approve
+```
+
+This creates all resources (tables, queues, Lambda functions, API routes, etc.) against your local services.
 
 ### Available Local Resources
 
@@ -90,7 +120,7 @@ This starts all services locally (API Gateway, DynamoDB, SQS, S3, SNS, Step Func
 
 ## Running Tests
 
-Run the end-to-end test script while `lws dev` is running:
+Run the end-to-end test script while `ldk dev` is running and after `terraform apply`:
 
 ```bash
 bash test-orders.sh
@@ -136,6 +166,8 @@ Workflow output:
 ```
 
 ## Deploying to AWS
+
+To deploy to real AWS (instead of local), remove the `_lws_override.tf` file (if present) and run:
 
 ```bash
 terraform apply
