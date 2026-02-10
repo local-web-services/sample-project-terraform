@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-LWS="/Users/eamonnfaherty/Development/github.com/local-development-kit/ldk/.venv/bin/lws"
+LWS=$(which lws)
 
 echo "=== Creating order ==="
 CREATE_RESPONSE=$($LWS apigateway test-invoke-method \
