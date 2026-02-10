@@ -1,6 +1,6 @@
 # lws-sample-project-terraform
 
-A serverless order processing system built with Terraform and designed for local development with [Local Web Services](https://github.com/local-web-services/local-web-services).
+A serverless order processing system built with [Terraform](https://www.terraform.io/) / [OpenTofu](https://opentofu.org/) and designed for local development with [Local Web Services](https://github.com/local-web-services/local-web-services).
 
 ## Architecture
 
@@ -56,7 +56,7 @@ lws-sample-project-terraform/
 ## Prerequisites
 
 - [uv](https://docs.astral.sh/uv/getting-started/installation/) (for running local-web-services)
-- [Terraform](https://www.terraform.io/) >= 1.0
+- [Terraform](https://www.terraform.io/) >= 1.0 or [OpenTofu](https://opentofu.org/) >= 1.6
 - Node.js 18+
 
 ## Setup
@@ -70,10 +70,12 @@ cd lambda/process-order && npm install && cd ../..
 cd lambda/generate-receipt && npm install && cd ../..
 ```
 
-Initialize Terraform:
+Initialize Terraform (or OpenTofu):
 
 ```bash
 terraform init
+# or
+tofu init
 ```
 
 ## Local Development
@@ -87,7 +89,7 @@ When you run `ldk dev` in this directory, it:
 3. **Generates** a `_lws_override.tf` file that redirects all AWS provider endpoints to your local services (this file is auto-added to `.gitignore`)
 4. **Watches** for file changes and reloads automatically
 
-You then run `terraform apply` against these local endpoints — no AWS account needed.
+You then run `terraform apply` (or `tofu apply`) against these local endpoints — no AWS account needed.
 
 ### Start the local environment
 
@@ -96,11 +98,13 @@ You then run `terraform apply` against these local endpoints — no AWS account 
 uvx --from local-web-services ldk dev
 ```
 
-### Apply Terraform
+### Apply Terraform / OpenTofu
 
 ```bash
 # Terminal 2: Apply against local endpoints
 terraform apply -auto-approve
+# or
+tofu apply -auto-approve
 ```
 
 This creates all resources (tables, queues, Lambda functions, API routes, etc.) against your local services.
@@ -120,7 +124,7 @@ This creates all resources (tables, queues, Lambda functions, API routes, etc.) 
 
 ## Running Tests
 
-Run the end-to-end test script while `ldk dev` is running and after `terraform apply`:
+Run the end-to-end test script while `ldk dev` is running and after `terraform apply` / `tofu apply`:
 
 ```bash
 bash test-orders.sh
@@ -171,6 +175,8 @@ To deploy to real AWS (instead of local), remove the `_lws_override.tf` file (if
 
 ```bash
 terraform apply
+# or
+tofu apply
 ```
 
 ## License
