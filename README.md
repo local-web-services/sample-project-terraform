@@ -13,6 +13,8 @@ The application implements an event-driven order processing workflow using the f
 - **Step Functions** - `OrderWorkflow` state machine orchestrating processing, receipt generation, and notification
 - **S3** - Receipt storage
 - **SNS** - Order status notifications
+- **SSM Parameter Store** - Application configuration parameters
+- **Secrets Manager** - Secure storage for API keys and credentials
 
 ### Request Flow
 
@@ -41,6 +43,8 @@ lws-sample-project-terraform/
 ├── sqs.tf                             # SQS queues
 ├── s3.tf                              # S3 bucket
 ├── sns.tf                             # SNS topic
+├── ssm.tf                             # SSM Parameter Store parameters
+├── secretsmanager.tf                  # Secrets Manager secrets
 ├── iam.tf                             # IAM roles and policies
 ├── lambda.tf                          # Lambda functions
 ├── apigateway.tf                      # HTTP API Gateway
@@ -85,7 +89,7 @@ tofu init
 When you run `ldk dev` in this directory, it:
 
 1. **Detects** the `.tf` files and enters Terraform mode automatically
-2. **Starts** all AWS service providers locally (DynamoDB, SQS, S3, SNS, Step Functions, API Gateway, Lambda, IAM, STS)
+2. **Starts** all AWS service providers locally (DynamoDB, SQS, S3, SNS, Step Functions, API Gateway, Lambda, IAM, STS, SSM, Secrets Manager)
 3. **Generates** a `_lws_override.tf` file that redirects all AWS provider endpoints to your local services (this file is auto-added to `.gitignore`)
 4. **Watches** for file changes and reloads automatically
 
@@ -119,8 +123,10 @@ This creates all resources (tables, queues, Lambda functions, API routes, etc.) 
 | Queue         | order-queue        | Order processing queue          |
 | Queue         | order-dlq          | Dead letter queue               |
 | Bucket        | ReceiptsBucket     | Receipt storage                 |
-| Topic         | order-notifications| Order status notifications      |
-| State Machine | OrderWorkflow      | Order processing workflow       |
+| Topic         | order-notifications         | Order status notifications        |
+| Parameter     | /orders/config/max-items    | Max items per order config        |
+| Secret        | orders/notification-api-key | Notification API key              |
+| State Machine | OrderWorkflow               | Order processing workflow         |
 
 ## Running Tests
 
