@@ -6,3 +6,5 @@
 .terraform-build/
 _lws_override.tf
 node_modules
+.claude
+.entire

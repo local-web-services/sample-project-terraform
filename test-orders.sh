@@ -56,3 +56,11 @@ GET_RESPONSE=$($LWS apigateway test-invoke-method \
   --http-method GET)
 
 echo "$GET_RESPONSE" | python3 -m json.tool
+
+echo ""
+echo "=== Checking SSM Parameter ==="
+$LWS ssm get-parameter --name /orders/config/max-items
+
+echo ""
+echo "=== Checking Secret ==="
+$LWS secretsmanager get-secret-value --secret-id orders/notification-api-key

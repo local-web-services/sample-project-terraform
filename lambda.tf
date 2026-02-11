@@ -63,9 +63,11 @@ resource "aws_lambda_function" "process_order" {
 
   environment {
     variables = {
-      TABLE_NAME  = aws_dynamodb_table.orders.name
-      TOPIC_ARN   = aws_sns_topic.order_notifications.arn
-      BUCKET_NAME = aws_s3_bucket.receipts.id
+      TABLE_NAME              = aws_dynamodb_table.orders.name
+      TOPIC_ARN               = aws_sns_topic.order_notifications.arn
+      BUCKET_NAME             = aws_s3_bucket.receipts.id
+      MAX_ITEMS_PARAM         = aws_ssm_parameter.max_items.name
+      NOTIFICATION_SECRET_ARN = aws_secretsmanager_secret.notification_api_key.arn
     }
   }
 }
