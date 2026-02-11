@@ -61,6 +61,7 @@ lws-sample-project-terraform/
 
 - [uv](https://docs.astral.sh/uv/getting-started/installation/) (for running local-web-services)
 - [Terraform](https://www.terraform.io/) >= 1.0 or [OpenTofu](https://opentofu.org/) >= 1.6
+- [Docker](https://docs.docker.com/get-docker/)
 - Node.js 18+
 
 ## Setup
@@ -80,6 +81,12 @@ Initialize Terraform (or OpenTofu):
 terraform init
 # or
 tofu init
+```
+
+Pull the Lambda runtime images (one-time setup):
+
+```bash
+uvx --from local-web-services ldk setup lambda
 ```
 
 ## Local Development
